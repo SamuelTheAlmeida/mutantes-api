@@ -38,15 +38,11 @@ public class MutantesRest {
     public String listarMutantes() throws Exception {
         dao.MutanteDAO mutanteDAO = new dao.MutanteDAO();
         List<Mutante> lista = mutanteDAO.listar();
-        
         JsonObject jsonObject = new JsonObject();
-        
         Gson gson = new GsonBuilder().create();
         JsonArray jsonArray = gson.toJsonTree(lista).getAsJsonArray();
         JsonObject userJsonObject = new JsonObject();
         jsonObject.add("mutantes", jsonArray);
-        //JsonObject usersJsonObject = new JsonObject();
-        //jsonObject.add("users", usersJsonObject);
         return jsonObject.toString();
     }
     
@@ -56,20 +52,37 @@ public class MutantesRest {
     public String obterMutante(@PathParam("id") String id) throws Exception {
         dao.MutanteDAO mutanteDAO = new dao.MutanteDAO();
         Mutante mutante = mutanteDAO.obter(Integer.valueOf(id));
-        
         JsonObject jsonObject = new JsonObject();
-        
         Gson gson = new GsonBuilder().create();
-        //JsonArray jsonArray = gson.toJsonTree(lista).getAsJsonArray();
-        //JsonObject userJsonObject = new JsonObject();
-        //jsonObject.add("mutantes", jsonArray);
-        
-
-
-        //JsonObject usersJsonObject = new JsonObject();
-        //jsonObject.add("users", usersJsonObject);
         return gson.toJson(mutante);
-        //return jsonObject.toString();
+    }
+    
+    @javax.ws.rs.GET
+    @javax.ws.rs.Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+    @Path("/remover/{id}")
+    public String removerMutante(@PathParam("id") String id) throws Exception {
+        dao.MutanteDAO mutanteDAO = new dao.MutanteDAO();
+        int idResult = mutanteDAO.remover(Integer.valueOf(id));
+        JSONObject object = new JSONObject();
+        object.put("id", idResult);
+        String jsonResult = object.toString();
+        System.out.println(jsonResult);
+        return jsonResult;
+    }
+    
+    @javax.ws.rs.GET
+    @javax.ws.rs.Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
+    @Path("/listar/{habilidade}")
+    public String listarPorHabilidade(@PathParam("habilidade") String habilidade) throws Exception {
+        System.out.println(habilidade);
+        dao.MutanteDAO mutanteDAO = new dao.MutanteDAO();
+        List<Mutante> lista = mutanteDAO.listarPorHabilidade(habilidade);
+        JsonObject jsonObject = new JsonObject();
+        Gson gson = new GsonBuilder().create();
+        JsonArray jsonArray = gson.toJsonTree(lista).getAsJsonArray();
+        JsonObject userJsonObject = new JsonObject();
+        jsonObject.add("mutantes", jsonArray);
+        return jsonObject.toString();
     }
     
     @POST

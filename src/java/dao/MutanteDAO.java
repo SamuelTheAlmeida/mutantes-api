@@ -51,6 +51,34 @@ public class MutanteDAO {
         }        
     }
     
+    public List<Mutante> listarPorHabilidade(String habilidade) throws Exception{
+        List<Mutante> lista = new ArrayList<Mutante>();
+        String result = "";
+        try {
+            Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
+            connect = DriverManager
+                    .getConnection("jdbc:derby://localhost/mutantes;user=root;password=admin");
+            PreparedStatement statement = connect
+                    .prepareStatement("SELECT M.id, M.nome, M.idFoto FROM Mutante M WHERE Id IN \n" +
+"(SELECT idMutante FROM Habilidade WHERE id IN\n" +
+"(SELECT Id FROM Habilidade WHERE UPPER(descricao) = UPPER(?)))");
+            statement.setString(1, habilidade);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Mutante m = new Mutante();
+                m.setId(resultSet.getInt("id"));
+                m.setNome(resultSet.getString("nome"));
+                m.setIdFoto(resultSet.getString("idFoto"));
+                lista.add(m);
+            }
+            return lista;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            close();
+        }        
+    }
+    
     public int cadastrar(Mutante mutante, List<String> habilidades) {
         int id = 0;
         try {
@@ -82,6 +110,31 @@ public class MutanteDAO {
         } finally {
             close();
             return id;
+        }                
+    }
+    
+        
+    public int remover(int id) {
+        try {
+            Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
+            connect = DriverManager
+                    .getConnection("jdbc:derby://localhost/mutantes;user=root;password=admin");
+            PreparedStatement statement = connect
+                    .prepareStatement("DELETE FROM Habilidade WHERE idMutante = ?");
+            statement.setInt(1, id);
+            statement.executeUpdate();
+            statement.close();
+            statement = connect
+                    .prepareStatement("DELETE FROM Mutante WHERE id = ?");
+            statement.setInt(1, id);
+            statement.executeUpdate();
+            statement.close();
+            return id;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close();
+            return 0;
         }                
     }
     
