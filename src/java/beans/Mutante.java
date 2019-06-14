@@ -16,6 +16,7 @@ public class Mutante implements Serializable{
     private String nome;
     private Usuario usuario;
     private List<Habilidade> habilidades;
+    private String foto;
     
     public Mutante() {
         
@@ -58,4 +59,14 @@ public class Mutante implements Serializable{
     public void setHabilidades(List<Habilidade> habilidades) {
         this.habilidades = habilidades;
     }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+    
+    
 }

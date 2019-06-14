@@ -40,6 +40,7 @@ import org.json.JSONObject;
  */
 @javax.ws.rs.Path("/mutantes")
 public class MutantesRest {
+    private final String dir = java.nio.file.Paths.get(".").toAbsolutePath().normalize().toString();
     
     @javax.ws.rs.GET
     @javax.ws.rs.Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
@@ -48,6 +49,11 @@ public class MutantesRest {
         System.out.println(java.nio.file.Paths.get(".").toAbsolutePath().normalize().toString());
         dao.MutanteDAO mutanteDAO = new dao.MutanteDAO();
         List<Mutante> lista = mutanteDAO.listar();
+        for (Mutante m : lista) {
+            File f =  new File(dir + "/" + m.getId() + ".png");
+            String encodstring = encodeFileToBase64Binary(f);
+            m.setFoto(encodstring);
+        }
         JsonObject jsonObject = new JsonObject();
         Gson gson = new GsonBuilder().create();
         JsonArray jsonArray = gson.toJsonTree(lista).getAsJsonArray();
@@ -62,6 +68,9 @@ public class MutantesRest {
     public String obterMutante(@PathParam("id") String id) throws Exception {
         dao.MutanteDAO mutanteDAO = new dao.MutanteDAO();
         Mutante mutante = mutanteDAO.obter(Integer.valueOf(id));
+        File f =  new File(dir + "/" + mutante.getId() + ".png");
+        String encodstring = encodeFileToBase64Binary(f);
+        mutante.setFoto(encodstring);
         JsonObject jsonObject = new JsonObject();
         Gson gson = new GsonBuilder().create();
         return gson.toJson(mutante);
@@ -121,7 +130,6 @@ public class MutantesRest {
             //System.out.println(jsonObject.getString("imagem"));
             byte[] decodedImg =  Base64.getMimeDecoder().decode(jsonObject.getString("imagem"));
             try {
-               String dir = java.nio.file.Paths.get(".").toAbsolutePath().normalize().toString();
                System.out.println("dir: " + dir);
                FileOutputStream fos = new FileOutputStream(dir + "/" + id + ".png");
                fos.write(decodedImg);
@@ -136,6 +144,21 @@ public class MutantesRest {
         System.out.println(jsonResult);
         return jsonResult;
     }
+    
+    private static String encodeFileToBase64Binary(File file) throws IOException{
+            String encodedfile = null;
+            try {
+                java.io.FileInputStream fileInputStreamReader = new java.io.FileInputStream(file);
+                byte[] bytes = new byte[(int)file.length()];
+                fileInputStreamReader.read(bytes);
+                encodedfile = new String(Base64.getMimeEncoder().encode(bytes));
+            } catch (java.io.FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                encodedfile = "";
+            }
+
+            return encodedfile;
+        }
 
  
 }
