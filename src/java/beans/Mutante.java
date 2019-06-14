@@ -14,7 +14,6 @@ import java.util.List;
 public class Mutante implements Serializable{
     private int id;
     private String nome;
-    private String idFoto;
     private Usuario usuario;
     private List<Habilidade> habilidades;
     
@@ -22,9 +21,8 @@ public class Mutante implements Serializable{
         
     }
 
-    public Mutante(String nome, String idFoto, Usuario usuario) {
+    public Mutante(String nome, Usuario usuario) {
         this.nome = nome;
-        this.idFoto = idFoto;
         this.usuario = usuario;
     }
 
@@ -44,15 +42,7 @@ public class Mutante implements Serializable{
     public void setNome(String nome) {
         this.nome = nome;
     }
-
-    public String getIdFoto() {
-        return idFoto;
-    }
-
-    public void setIdFoto(String idFoto) {
-        this.idFoto = idFoto;
-    }
-
+    
     public Usuario getUsuario() {
         return usuario;
     }

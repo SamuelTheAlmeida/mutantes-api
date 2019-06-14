@@ -40,7 +40,6 @@ public class MutanteDAO {
                 Mutante m = new Mutante();
                 m.setId(resultSet.getInt("id"));
                 m.setNome(resultSet.getString("nome"));
-                m.setIdFoto(resultSet.getString("idFoto"));
                 lista.add(m);
             }
             return lista;
@@ -59,7 +58,7 @@ public class MutanteDAO {
             connect = DriverManager
                     .getConnection("jdbc:derby://localhost/mutantes;user=root;password=admin");
             PreparedStatement statement = connect
-                    .prepareStatement("SELECT M.id, M.nome, M.idFoto FROM Mutante M WHERE Id IN \n" +
+                    .prepareStatement("SELECT M.id, M.nome FROM Mutante M WHERE Id IN \n" +
 "(SELECT idMutante FROM Habilidade WHERE id IN\n" +
 "(SELECT Id FROM Habilidade WHERE UPPER(descricao) = UPPER(?)))");
             statement.setString(1, habilidade);
@@ -68,7 +67,6 @@ public class MutanteDAO {
                 Mutante m = new Mutante();
                 m.setId(resultSet.getInt("id"));
                 m.setNome(resultSet.getString("nome"));
-                m.setIdFoto(resultSet.getString("idFoto"));
                 lista.add(m);
             }
             return lista;
@@ -146,13 +144,12 @@ public class MutanteDAO {
             connect = DriverManager
                     .getConnection("jdbc:derby://localhost/mutantes;user=root;password=admin");
             PreparedStatement statement = connect
-                    .prepareStatement("SELECT id, nome, idFoto FROM Mutante WHERE id = " + id);
+                    .prepareStatement("SELECT id, nome FROM Mutante WHERE id = " + id);
             
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 mutante.setId(resultSet.getInt("id"));
                 mutante.setNome(resultSet.getString("nome"));
-                mutante.setIdFoto(resultSet.getString("idFoto"));
             }
             List<Habilidade> habilidades = listarHabilidades(mutante.getId());
             mutante.setHabilidades(habilidades);

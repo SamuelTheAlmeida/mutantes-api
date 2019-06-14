@@ -14,8 +14,17 @@ import dao.MutanteDAO;
 import java.util.List;
 import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -36,6 +45,7 @@ public class MutantesRest {
     @javax.ws.rs.Produces(javax.ws.rs.core.MediaType.APPLICATION_JSON)
     @Path("/")
     public String listarMutantes() throws Exception {
+        System.out.println(java.nio.file.Paths.get(".").toAbsolutePath().normalize().toString());
         dao.MutanteDAO mutanteDAO = new dao.MutanteDAO();
         List<Mutante> lista = mutanteDAO.listar();
         JsonObject jsonObject = new JsonObject();
@@ -89,7 +99,7 @@ public class MutantesRest {
     @Path("/novo")
     @Consumes(MediaType.APPLICATION_JSON)
     @javax.ws.rs.Produces(MediaType.APPLICATION_JSON)
-    public String salvar(String json) throws JSONException {
+    public String salvar(String json) throws JSONException, IOException, FileNotFoundException {
         MutanteDAO mutanteDAO = new MutanteDAO();
         JSONObject jsonObject = new JSONObject(json);
         List<String> habilidades = new ArrayList<String>();
@@ -102,11 +112,24 @@ public class MutantesRest {
         if (jsonObject.getString("habilidade3").length() > 0) {
             habilidades.add(jsonObject.getString("habilidade3"));
         }
+ 
         Mutante m = new Mutante();
         m.setNome(jsonObject.getString("nome"));
         
         int id = mutanteDAO.cadastrar(m, habilidades);
-        
+        if (jsonObject.getString("imagem").length() > 0) {
+            //System.out.println(jsonObject.getString("imagem"));
+            byte[] decodedImg =  Base64.getMimeDecoder().decode(jsonObject.getString("imagem"));
+            try {
+               String dir = java.nio.file.Paths.get(".").toAbsolutePath().normalize().toString();
+               System.out.println("dir: " + dir);
+               FileOutputStream fos = new FileOutputStream(dir + "/" + id + ".png");
+               fos.write(decodedImg);
+               fos.close();
+            } catch (FileNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        }
         JSONObject object = new JSONObject();
         object.put("id", id);
         String jsonResult = object.toString();
