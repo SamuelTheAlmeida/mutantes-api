@@ -96,6 +96,11 @@ public class MutantesRest {
         System.out.println(habilidade);
         dao.MutanteDAO mutanteDAO = new dao.MutanteDAO();
         List<Mutante> lista = mutanteDAO.listarPorHabilidade(habilidade);
+        for (Mutante m : lista) {
+            File f =  new File(dir + "/" + m.getId() + ".png");
+            String encodstring = encodeFileToBase64Binary(f);
+            m.setFoto(encodstring);
+        }
         JsonObject jsonObject = new JsonObject();
         Gson gson = new GsonBuilder().create();
         JsonArray jsonArray = gson.toJsonTree(lista).getAsJsonArray();

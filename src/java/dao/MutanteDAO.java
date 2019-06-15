@@ -31,7 +31,7 @@ public class MutanteDAO {
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
             connect = DriverManager
-                    .getConnection("jdbc:derby://localhost/mutantes;user=root;password=admin");
+                    .getConnection("jdbc:derby://localhost/mutantes-api;user=root;password=admin");
             PreparedStatement statement = connect
                     .prepareStatement("SELECT * from Mutante");
             
@@ -56,7 +56,7 @@ public class MutanteDAO {
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
             connect = DriverManager
-                    .getConnection("jdbc:derby://localhost/mutantes;user=root;password=admin");
+                    .getConnection("jdbc:derby://localhost/mutantes-api;user=root;password=admin");
             PreparedStatement statement = connect
                     .prepareStatement("SELECT M.id, M.nome FROM Mutante M WHERE Id IN \n" +
 "(SELECT idMutante FROM Habilidade WHERE id IN\n" +
@@ -82,7 +82,7 @@ public class MutanteDAO {
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
             connect = DriverManager
-                    .getConnection("jdbc:derby://localhost/mutantes;user=root;password=admin");
+                    .getConnection("jdbc:derby://localhost/mutantes-api;user=root;password=admin");
             String query = "INSERT INTO Mutante(nome, idUsuario) VALUES(?, ?)";
             PreparedStatement statement = connect.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, mutante.getNome());
@@ -116,7 +116,7 @@ public class MutanteDAO {
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
             connect = DriverManager
-                    .getConnection("jdbc:derby://localhost/mutantes;user=root;password=admin");
+                    .getConnection("jdbc:derby://localhost/mutantes-api;user=root;password=admin");
             PreparedStatement statement = connect
                     .prepareStatement("DELETE FROM Habilidade WHERE idMutante = ?");
             statement.setInt(1, id);
@@ -142,7 +142,7 @@ public class MutanteDAO {
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
             connect = DriverManager
-                    .getConnection("jdbc:derby://localhost/mutantes;user=root;password=admin");
+                    .getConnection("jdbc:derby://localhost/mutantes-api;user=root;password=admin");
             PreparedStatement statement = connect
                     .prepareStatement("SELECT id, nome FROM Mutante WHERE id = " + id);
             
@@ -167,7 +167,7 @@ public class MutanteDAO {
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
             connect = DriverManager
-                    .getConnection("jdbc:derby://localhost/mutantes;user=root;password=admin");
+                    .getConnection("jdbc:derby://localhost/mutantes-api;user=root;password=admin");
             PreparedStatement statement = connect
                     .prepareStatement("SELECT * from Habilidade WHERE idMutante = " + idMutante);
             resultSet = statement.executeQuery();
